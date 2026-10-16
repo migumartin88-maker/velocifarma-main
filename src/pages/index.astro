@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { drugs } from '../data/drugs';
+import hospitalLogo from '../../assets/logo.jpg';
+import '../styles/global.css';
+
+const selectedDrug = drugs[0];
+---
+
+<BaseLayout>
+  <div class="workspace">
+    <main id="inicio" class="main-area">
+      <section class="page-heading" id="calculadora">
+        <div>
+          <p class="eyebrow">Calculadora de administración</p>
+          <h1>Ritmos de perfusión</h1>
+          <p class="intro">Configura una administración para consultar su pauta de velocidad.</p>
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <section class="input-panel" aria-labelledby="input-title">
+          <div class="panel-head">
+            <div><span class="section-kicker">Datos de administración</span><h2 id="input-title">Parámetros</h2></div>
+          </div>
+
+          <form class="form-body" id="infusion-form">
+            <label class="field field-wide">
+              <span class="field-label">Fármaco</span>
+              <span class="select-wrap">
+                <select name="drug" required aria-label="Nombre del fármaco">
+                  {drugs.map((drug) => <option value={drug.id} data-status={drug.protocolStatus}>{drug.name}</option>)}
+                </select>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+              </span>
+            </label>
+
+            <label class="field">
+              <span class="field-label">Dosis</span>
+              <span class="input-wrap"><input name="doseMg" type="number" min="0" step="any" placeholder="0" required /><span class="unit">mg</span></span>
+            </label>
+
+            <label class="field">
+              <span class="field-label">Volumen de perfusión</span>
+              <span class="input-wrap fixed-volume" aria-label="Volumen fijo de 250 mL de SSF"><input name="volumeMl" type="number" value="250" readonly tabindex="-1" aria-readonly="true" /><span class="unit">mL</span></span>
+            </label>
+
+            <label class="field field-wide">
+              <span class="field-label">Número de administración</span>
+              <span class="select-wrap">
+                <select name="administrationNumber" required aria-label="Número de administración">
+                  <option value="" selected disabled>Selecciona una opción</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3 y siguientes</option>
+                </select>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+              </span>
+            </label>
+
+            <div class="form-actions">
+              <button type="submit" class="primary-button" disabled>Calcular ritmo <span aria-hidden="true">↗</span></button>
+            </div>
+          </form>
+        </section>
+
+        <section class="result-panel" aria-label="Resultado del cálculo" aria-live="polite">
+          <div class="result-empty" id="result-empty"></div>
+          <div class="result-content" id="result-content" hidden>
+            <div class="print-header"><img src={hospitalLogo.src} alt="Logotipo del hospital" /></div>
+            <div class="patient-identification" aria-label="Identificación del paciente">
+              <label class="patient-field"><strong>NOMBRE:</strong><input class="patient-input patient-input-name" name="patientName" type="text" aria-label="Nombre de paciente" autocomplete="off" /></label>
+              <label class="patient-field"><strong>NHC:</strong><input class="patient-input patient-input-short" name="patientRecordNumber" type="text" aria-label="NHC" autocomplete="off" /></label>
+            </div>
+            <div class="result-summary">
+              <h2 class="result-drug-line"><strong id="result-heading">Rituximab</strong><span id="result-dose-summary"></span></h2>
+              <p class="empty-copy" id="result-duration"></p>
+            </div>
+            <div class="result-actions">
+              <button type="button" class="pdf-export-button" id="pdf-export-button">Guardar PDF</button>
+              <button type="button" class="pdf-export-button" id="print-button">Imprimir</button>
+            </div>
+            <div class="steps-table-wrap">
+              <table class="steps-table">
+                <thead><tr><th>Tramo</th><th>Velocidad</th><th>Volumen</th><th>Volumen acumulado</th></tr></thead>
+                <tbody id="steps-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+</BaseLayout>
+
+<script>
+  import { createInfusionSteps } from '../lib/infusion';
+
+  const form = document.querySelector<HTMLFormElement>('#infusion-form');
+  const drugSelect = form?.elements.namedItem('drug') as HTMLSelectElement | null;
+  const doseInput = form?.elements.namedItem('doseMg') as HTMLInputElement | null;
+  const volumeInput = form?.elements.namedItem('volumeMl') as HTMLInputElement | null;
+  const administrationInput = form?.elements.namedItem('administrationNumber') as HTMLSelectElement | null;
+  const calculateButton = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const resultEmpty = document.querySelector<HTMLElement>('#result-empty');
+  const resultContent = document.querySelector<HTMLElement>('#result-content');
+  const resultHeading = document.querySelector<HTMLElement>('#result-heading');
+  const resultDoseSummary = document.querySelector<HTMLElement>('#result-dose-summary');
+  const resultDuration = document.querySelector<HTMLElement>('#result-duration');
+  const pdfExportButton = document.querySelector<HTMLButtonElement>('#pdf-export-button');
+  const printButton = document.querySelector<HTMLButtonElement>('#print-button');
+  const stepsBody = document.querySelector<HTMLTableSectionElement>('#steps-body');
+
+  const numberFormat = new Intl.NumberFormat('es-ES', {
+    maximumFractionDigits: 1,
+    roundingMode: 'halfExpand',
+  });
+  const format = (value: number) => numberFormat.format(value);
+
+  function formatDuration(totalMinutes: number) {
+    const roundedTotalMinutes = Math.round(totalMinutes);
+    const hours = Math.floor(roundedTotalMinutes / 60);
+    const minutes = roundedTotalMinutes % 60;
+    const parts = [];
+
+    if (hours > 0) parts.push(`${format(hours)} ${hours === 1 ? 'hora' : 'horas'}`);
+    if (minutes > 0) parts.push(`${format(minutes)} ${minutes === 1 ? 'minuto' : 'minutos'}`);
+
+    return parts.join(' y ') || '0 minutos';
+  }
+
+  function updateButton() {
+    if (!form || !calculateButton || !drugSelect) return;
+    const selectedOption = drugSelect.selectedOptions[0];
+    const protocolReady = selectedOption?.dataset.status === 'ready';
+    calculateButton.disabled = !protocolReady || !form.checkValidity();
+  }
+
+  function resetResults() {
+    if (resultEmpty) resultEmpty.hidden = false;
+    if (resultContent) resultContent.hidden = true;
+  }
+
+  form?.addEventListener('input', () => {
+    updateButton();
+    resetResults();
+  });
+  form?.addEventListener('change', () => {
+    updateButton();
+    resetResults();
+  });
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!form) return;
+    if (!form.reportValidity() || !doseInput || !volumeInput || !administrationInput || !drugSelect) return;
+
+    try {
+      const steps = createInfusionSteps({
+        drugId: drugSelect.value,
+        doseMg: doseInput.valueAsNumber,
+        volumeMl: volumeInput.valueAsNumber,
+        administrationNumber: Number(administrationInput.value),
+      });
+      if (!stepsBody || !resultEmpty || !resultContent || !resultHeading || !resultDoseSummary || !resultDuration) return;
+
+      stepsBody.replaceChildren();
+      let totalMinutes = 0;
+      let accumulatedVolumeMl = 0;
+      steps.forEach((step, index) => {
+        const volumeMl = step.rateMlPerHour * step.durationMinutes / 60;
+        accumulatedVolumeMl += volumeMl;
+        totalMinutes += step.durationMinutes;
+        const row = document.createElement('tr');
+        [
+          `${index + 1}º ${format(step.durationMinutes)} min`,
+          `${format(step.rateMlPerHour)} mL/h`,
+          `${format(volumeMl)} mL`,
+          `${format(accumulatedVolumeMl)} mL`,
+        ].forEach((value) => {
+          const cell = document.createElement('td');
+          cell.textContent = value;
+          row.append(cell);
+        });
+        stepsBody.append(row);
+      });
+
+      resultHeading.textContent = drugSelect.selectedOptions[0]?.textContent?.trim() ?? drugSelect.value;
+      resultDoseSummary.textContent = `${format(doseInput.valueAsNumber)} mg / ${format(volumeInput.valueAsNumber)} mL SSF`;
+      resultDuration.textContent = `Duración total estimada: ${formatDuration(totalMinutes)}`;
+      resultEmpty.hidden = true;
+      resultContent.hidden = false;
+    } catch {
+      clearTable();
+    }
+  });
+
+  pdfExportButton?.addEventListener('click', () => window.print());
+  printButton?.addEventListener('click', () => window.print());
+
+  updateButton();
+</script>

@@ -1,0 +1,25 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Ritmos de perfusión',
+  description = 'Herramienta para calcular ritmos de administración de perfusiones.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f2f5f4" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

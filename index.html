@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f1f5f9">
+  <title>RITMO DE ADMINISTRACIÓN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] } } } }
+  </script>
+  <style>
+    * { font-variant-numeric: tabular-nums; }
+    body { background: #f1f5f9; }
+    .check { appearance: none; width: 17px; height: 17px; border: 1.5px solid #cbd5e1; border-radius: 4px; background: white; display: inline-grid; place-content: center; }
+    .check:checked { background: #334155; border-color: #334155; }
+    .check:checked::before { content: '✓'; color: white; font-size: 12px; line-height: 1; }
+  </style>
+</head>
+<body class="min-h-screen font-sans text-slate-800 antialiased">
+  <div class="min-h-screen">
+    <header class="border-b border-slate-200 bg-white">
+      <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+        <a href="#" class="ml-auto flex items-center" aria-label="Hospital Comarcal de Laredo">
+          <img src="assets/@logo.jpg" alt="Hospital Comarcal de Laredo · SCS" class="h-10 w-auto object-contain sm:h-11">
+        </a>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl px-5 py-6 sm:px-8 sm:py-8">
+      <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-semibold tracking-tight text-slate-900 sm:text-[28px]">RITMO DE ADMINISTRACIÓN</h1>
+        </div>
+        <div class="flex items-center rounded-md border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm">
+          <span class="text-base sm:text-lg">Miércoles, 14 oct 2026</span>
+        </div>
+      </div>
+
+      <section aria-label="Datos del paciente" class="mb-5 rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="grid grid-cols-1 gap-x-5 gap-y-3 px-5 py-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-4">
+          <div class="flex min-w-0 items-center gap-1"><label for="nhc" class="shrink-0 text-[13px] font-semibold text-slate-600">NHC:</label><input id="nhc" value="" class="min-w-0 w-12 border-0 bg-transparent p-0 text-[15px] font-semibold text-slate-900 outline-none" readonly><input id="free-text" type="text" class="min-w-0 flex-1 rounded border border-slate-200 bg-white px-2 py-1 text-[15px] font-medium text-slate-900 outline-none focus:border-slate-400" aria-label="Campo editable junto al NHC"></div>
+          <div class="flex min-w-0 items-center gap-1"><label for="patient" class="shrink-0 text-[13px] font-semibold text-slate-600">Nombre de paciente:</label><input id="patient" value="" class="min-w-0 flex-1 border-0 bg-transparent p-0 text-[15px] font-semibold text-slate-900 outline-none" readonly><input id="patient-free-text" type="text" class="min-w-0 flex-1 rounded border border-slate-200 bg-white px-2 py-1 text-[15px] font-medium text-slate-900 outline-none focus:border-slate-400" aria-label="Campo editable junto al nombre de paciente"></div>
+          <div class="flex min-w-0 items-baseline gap-1.5">
+            <label for="administration" class="shrink-0 text-[13px] font-semibold text-slate-600">Nº de administración:</label>
+            <div class="relative min-w-0 flex-1"><select id="administration" class="w-full appearance-none border-0 bg-transparent py-0 pl-1 pr-6 text-[15px] font-semibold text-slate-900 outline-none"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><svg class="pointer-events-none absolute right-1 top-0.5 h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.2 7.5a.75.75 0 0 1 1.06.02L10 11.43l3.74-3.91a.75.75 0 1 1 1.08 1.04l-4.28 4.48a.75.75 0 0 1-1.08 0L5.18 8.56a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"/></svg></div>
+          </div>
+          <div class="flex min-w-0 items-baseline gap-1.5">
+            <label for="drug" class="shrink-0 text-[13px] font-semibold text-slate-600">Fármaco:</label>
+            <div class="relative"><select id="drug" class="appearance-none bg-transparent pr-6 text-sm font-semibold text-slate-800 outline-none"><option selected>Rituximab</option></select><svg class="pointer-events-none absolute right-0 top-1 h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.2 7.5a.75.75 0 0 1 1.06.02L10 11.43l3.74-3.91a.75.75 0 1 1 1.08 1.04l-4.28 4.48a.75.75 0 0 1-1.08 0L5.18 8.56a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"/></svg></div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Datos de la mezcla intravenosa" class="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div class="rounded-xl border border-slate-700 bg-slate-800 px-5 py-5 text-white shadow-sm sm:px-7">
+          <label for="mixture" class="mb-3 block text-sm font-semibold uppercase tracking-[.12em] text-slate-100">Composición mezcla intravenosa</label>
+          <textarea id="mixture" rows="3" class="block w-full resize-y rounded-md border border-slate-500 bg-slate-50 px-3 py-2.5 text-sm leading-relaxed text-slate-800 outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-400/40" aria-label="Campo libre para escribir la composición de la mezcla intravenosa"></textarea>
+        </div>
+        <div class="rounded-xl border border-slate-700 bg-slate-800 px-5 py-5 text-white shadow-sm sm:px-7">
+          <label for="concentration" class="mb-3 block text-sm font-semibold uppercase tracking-[.12em] text-slate-100">Concentración en mg/mL</label>
+          <textarea id="concentration" rows="3" class="block w-full resize-y rounded-md border border-slate-500 bg-slate-50 px-3 py-2.5 text-sm leading-relaxed text-slate-800 outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-400/40" aria-label="Campo libre para escribir la concentración en miligramos por mililitro"></textarea>
+        </div>
+      </section>
+
+      <section aria-labelledby="schedule-heading" class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4 sm:px-6">
+          <div><div class="flex items-center gap-2"><h2 id="schedule-heading" class="text-sm font-semibold text-slate-900">Cronograma de administración</h2><span class="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">PROTOCOLO</span></div><p class="mt-1 text-xs text-slate-500">Escalado progresivo de velocidad <span class="mx-1 text-slate-300">·</span> Rituximab</p></div>
+          <div class="flex items-center gap-4 text-[11px] text-slate-500"><span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>Completado</span><span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-slate-700"></span>Actual</span><span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full border border-slate-300 bg-white"></span>Pendiente</span></div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[720px] border-collapse text-left text-sm">
+            <thead><tr class="bg-slate-50 text-[10px] font-semibold uppercase tracking-[.12em] text-slate-500"><th class="w-[7%] px-5 py-3 sm:px-6">Paso</th><th class="w-[18%] px-4 py-3">Velocidad</th><th class="w-[17%] px-4 py-3">Duración</th><th class="w-[19%] px-4 py-3">Volumen aprox.</th><th class="w-[19%] px-4 py-3">Control enfermería</th><th class="w-[20%] px-4 py-3">Estado</th></tr></thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="bg-white"><td class="px-5 py-3.5 sm:px-6"><span class="grid h-7 w-7 place-items-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700">1</span></td><td class="px-4 py-3.5 font-semibold text-slate-800">50 <span class="text-xs font-normal text-slate-500">mL/h</span></td><td class="px-4 py-3.5 text-slate-600">30 min</td><td class="px-4 py-3.5 text-slate-600">25 mL</td><td class="px-4 py-3.5"><label class="inline-flex items-center gap-2 text-xs text-slate-600"><input class="check" type="checkbox" checked><span>Verificado</span></label></td><td class="px-4 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700"><span class="grid h-4 w-4 place-items-center rounded-full bg-emerald-100 text-[10px]">✓</span>Completado <span class="text-slate-400">10:15</span></span></td></tr>
+              <tr class="bg-slate-50/70"><td class="px-5 py-3.5 sm:px-6"><span class="grid h-7 w-7 place-items-center rounded-full bg-slate-800 text-xs font-semibold text-white">2</span></td><td class="px-4 py-3.5 font-semibold text-slate-900">100 <span class="text-xs font-normal text-slate-500">mL/h</span></td><td class="px-4 py-3.5 text-slate-600">30 min</td><td class="px-4 py-3.5 text-slate-600">50 mL</td><td class="px-4 py-3.5"><label class="inline-flex items-center gap-2 text-xs font-medium text-slate-700"><input class="check" type="checkbox"><span>Registrar control</span></label></td><td class="px-4 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-800"><span class="h-2 w-2 rounded-full bg-slate-700"></span>En curso <span class="text-slate-500">· 10:42</span></span></td></tr>
+              <tr><td class="px-5 py-3.5 sm:px-6"><span class="grid h-7 w-7 place-items-center rounded-full border border-slate-200 bg-white text-xs font-medium text-slate-500">3</span></td><td class="px-4 py-3.5 font-semibold text-slate-700">150 <span class="text-xs font-normal text-slate-500">mL/h</span></td><td class="px-4 py-3.5 text-slate-600">30 min</td><td class="px-4 py-3.5 text-slate-600">75 mL</td><td class="px-4 py-3.5"><label class="inline-flex items-center gap-2 text-xs text-slate-500"><input class="check" type="checkbox"><span>Registrar control</span></label></td><td class="px-4 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-slate-500"><span class="h-2 w-2 rounded-full border border-slate-300"></span>Pendiente</span></td></tr>
+              <tr><td class="px-5 py-3.5 sm:px-6"><span class="grid h-7 w-7 place-items-center rounded-full border border-slate-200 bg-white text-xs font-medium text-slate-500">4</span></td><td class="px-4 py-3.5 font-semibold text-slate-700">200 <span class="text-xs font-normal text-slate-500">mL/h</span></td><td class="px-4 py-3.5 text-slate-600">30 min</td><td class="px-4 py-3.5 text-slate-600">100 mL</td><td class="px-4 py-3.5"><label class="inline-flex items-center gap-2 text-xs text-slate-500"><input class="check" type="checkbox"><span>Registrar control</span></label></td><td class="px-4 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-slate-500"><span class="h-2 w-2 rounded-full border border-slate-300"></span>Pendiente</span></td></tr>
+              <tr><td class="px-5 py-3.5 sm:px-6"><span class="grid h-7 w-7 place-items-center rounded-full border border-slate-200 bg-white text-xs font-medium text-slate-500">5</span></td><td class="px-4 py-3.5 font-semibold text-slate-700">250 <span class="text-xs font-normal text-slate-500">mL/h</span></td><td class="px-4 py-3.5 text-slate-600">Resto de dosis</td><td class="px-4 py-3.5 text-slate-600">250 mL</td><td class="px-4 py-3.5"><label class="inline-flex items-center gap-2 text-xs text-slate-500"><input class="check" type="checkbox"><span>Registrar control</span></label></td><td class="px-4 py-3.5"><span class="inline-flex items-center gap-1.5 text-xs text-slate-500"><span class="h-2 w-2 rounded-full border border-slate-300"></span>Pendiente</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 bg-slate-50/70 px-5 py-3 text-[11px] text-slate-500 sm:px-6"><span>Controles registrados: <strong class="font-semibold text-slate-700">1 de 5</strong></span><span>Última actualización: 14 oct 2026, 10:42 <span class="mx-1 text-slate-300">·</span> L. Ruiz, enfermería</span></div>
+      </section>
+      <footer class="mt-4 flex items-start gap-2 text-[11px] leading-relaxed text-slate-500"><svg class="mt-0.5 h-3.5 w-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-11.5a.75.75 0 0 0-1.5 0v.1a.75.75 0 0 0 1.5 0v-.1ZM9 9.25a.75.75 0 0 1 .75-.75h.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-.75.75h-.5A.75.75 0 0 1 9 12.75v-3.5Z" clip-rule="evenodd"/></svg><span>Vista de demostración con datos estáticos. La administración real debe seguir la prescripción validada y el protocolo vigente del centro.</span></footer>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+---
+interface Props {
+  tone?: 'pending' | 'ready';
+  children: string;
+}
+
+const { tone = 'pending', children } = Astro.props;
+---
+
+<span class={`status-pill status-pill--${tone}`}><span class="status-pill__dot"></span>{children}</span>
+
+<style>
+  .status-pill { display: inline-flex; align-items: center; gap: 7px; margin-left: auto; white-space: nowrap; color: #987442; font-size: 9px; }
+  .status-pill__dot { width: 7px; height: 7px; border: 1px solid #bd8b48; background: #f7ead5; border-radius: 50%; }
+  .status-pill--ready { color: #147d70; }
+  .status-pill--ready .status-pill__dot { border-color: #218a76; background: #d9efe7; }
+</style>
